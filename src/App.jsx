@@ -36,7 +36,7 @@ function App() {
   return (
     <>
       <h1>DARTH VÄDER</h1>
-      <h2></h2>
+      <h2>Skurarna Slår Tillbaka</h2>
       {weatherData.main ? (
         <>
           <h2>City: {weatherData.name}</h2>
