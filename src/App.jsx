@@ -28,18 +28,19 @@ function App() {
     console.log(`Before call: ${typeof (weatherData)}`)
 
     async function fetchWeather() {
+      let sameCoords = false
       navigator.geolocation.getCurrentPosition((position) => {
+        if (lat === position.coords.latitude && long === position.coords.longitude) {
+          sameCoords = true
+        }
         setLat(position.coords.latitude)
         setLong(position.coords.longitude)
-        if (lat === position.coords.latitude && long === position.coords.longitude) {
-          if (new Date().getTime() - dataAge < 600000) {
-            setWeatherData(weatherDataSaved)
-            console.log('Not old')
-            return
-          }
-        }
       })
-
+      if (new Date().getTime() - dataAge < 600000 && sameCoords) {
+        setWeatherData(weatherDataSaved)
+        console.log('Not old')
+        return
+      }
 
       console.log('Fetching')
       const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?'
@@ -47,6 +48,8 @@ function App() {
         .then(res => res.json())
         .then(result => {
           setWeatherData(result)
+          localStorage.setItem('lat', JSON.stringify(lat))
+          localStorage.setItem('long', JSON.stringify(long))
           localStorage.setItem('weatherDataSaved', JSON.stringify(result))
           localStorage.setItem('dataAge', JSON.stringify(new Date().getTime()))
           console.log(result)
