@@ -29,6 +29,8 @@ function App() {
 
     async function fetchWeather() {
       navigator.geolocation.getCurrentPosition((position) => {
+        setLat(position.coords.latitude)
+        setLong(position.coords.longitude)
         if (lat === position.coords.latitude && long === position.coords.longitude) {
           if (new Date().getTime() - dataAge < 600000) {
             setWeatherData(weatherDataSaved)
@@ -38,14 +40,13 @@ function App() {
         }
       })
 
+
       console.log('Fetching')
       const baseUrl = 'https://api.openweathermap.org/data/2.5/weather?'
       await fetch(`${baseUrl}lat=${lat}&lon=${long}&appid=${import.meta.env.VITE_API_KEY}`)
         .then(res => res.json())
         .then(result => {
           setWeatherData(result)
-          localStorage.setItem('lat', JSON.stringify(lat))
-          localStorage.setItem('long', JSON.stringify(long))
           localStorage.setItem('weatherDataSaved', JSON.stringify(result))
           localStorage.setItem('dataAge', JSON.stringify(new Date().getTime()))
           console.log(result)
