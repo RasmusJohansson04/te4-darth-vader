@@ -8,5 +8,7 @@
 
 body {
   background-color: var(--primary-color);
+  color: white;
+  text-shadow: var(--secondary-color) 0 0 10px;
   font-family: var(--font);
 }
